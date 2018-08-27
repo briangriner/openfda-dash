@@ -152,15 +152,16 @@ app.layout = html.Div([
 @app.callback(Output('my_graph', 'figure'),
               [Input('submit-button','n_clicks')],
               [State('my_drug_picker', 'value')])
-def update_graph(n_clicks,selected_drug):
+def update_primarysource_plot(n_clicks,selected_drug):
 
     if (selected_drug):
-        url = 'https://api.fda.gov/drug/event.json?api_key=NmPuF5e95qXX9gj59DGfG5g2EACkGnfzXP09Xb3H&search=_exists_:(patient.reaction.reactionmeddrapt.exact)+AND+patient.drug.openfda.brand_name:({})&count=primarysource.qualification'.format(selected_drug)
+        #url = 'https://api.fda.gov/drug/event.json?count=primarysource.qualification'
+        url = 'https://api.fda.gov/drug/event.json?search=_exists_:(patient.reaction.reactionmeddrapt.exact)+AND+patient.drug.openfda.brand_name:({})&count=primarysource.qualification'.format(selected_drug)
     else:
         url = 'https://api.fda.gov/drug/event.json?api_key=NmPuF5e95qXX9gj59DGfG5g2EACkGnfzXP09Xb3H&count=primarysource.qualification'
 
     results = get_results(url)
-    print(results)
+    print('Primary Sources',results)
     df = pd.DataFrame(results, columns=['term', 'count'])
 
     df['titles'] = df['term'].map(primarysources)
@@ -183,10 +184,8 @@ def update_graph(n_clicks,selected_drug):
 @app.callback(Output('pie-primarysources', 'figure'),
               [Input('submit-button','n_clicks')],
               [State('my_drug_picker', 'value')])
-    #output=Output("pie-primarysources", "figure"), inputs=[Input('my_drug_picker', 'value')]
-
 # @cache.memoize(timeout=30)  # in seconds (pickle.dump fails)
-def update_pie_event(n_clicks,selected_drug):
+def update_primarysource_pie(n_clicks,selected_drug):
     if (selected_drug):
         url = 'https://api.fda.gov/drug/event.json?api_key=NmPuF5e95qXX9gj59DGfG5g2EACkGnfzXP09Xb3H&search=_exists_:(patient.reaction.reactionmeddrapt.exact)+AND+patient.drug.openfda.brand_name:({})&count=primarysource.qualification'.format(selected_drug)
     else:
@@ -225,7 +224,7 @@ def update_pie_event(n_clicks,selected_drug):
     #output=Output("pie-gender", "figure"), inputs=[Input('my_drug_picker', 'value')]
 
 # @cache.memoize(timeout=30)  # in seconds (pickle.dump fails)
-def update_pie_event(n_clicks,selected_drug):
+def update_gender_pie(n_clicks,selected_drug):
 
     if (selected_drug):
         url = 'https://api.fda.gov/drug/event.json?api_key=NmPuF5e95qXX9gj59DGfG5g2EACkGnfzXP09Xb3H&search=_exists_:(patient.reaction.reactionmeddrapt.exact)+AND+patient.drug.openfda.brand_name:({})&count=patient.patientsex'.format (selected_drug)
@@ -259,7 +258,7 @@ def update_pie_event(n_clicks,selected_drug):
 @app.callback(Output('graph2', 'figure'),
                   [Input('submit-button','n_clicks')],
                   [State('my_drug_picker', 'value')])
-def update_graph2(n_clicks,selected_drug):
+def update_gender_plot(n_clicks,selected_drug):
 
     if (selected_drug):
         url = 'https://api.fda.gov/drug/event.json?api_key=NmPuF5e95qXX9gj59DGfG5g2EACkGnfzXP09Xb3H&search=_exists_:(patient.reaction.reactionmeddrapt.exact)+AND+patient.drug.openfda.brand_name:({})&count=patient.patientsex'.format (selected_drug)
@@ -289,21 +288,22 @@ def update_graph2(n_clicks,selected_drug):
 @app.callback(Output('scatter-serious', 'figure'),
                   [Input('submit-button','n_clicks')],
                   [State('my_drug_picker', 'value')])
-def update_graph2(n_clicks,selected_drug):
+def update_serious_plot(n_clicks,selected_drug):
 
      if (selected_drug):
-        url1 = 'https://api.fda.gov/drug/event.json?api_key=NmPuF5e95qXX9gj59DGfG5g2EACkGnfzXP09Xb3H&count=seriousnessdeath'
-        url2 = 'https://api.fda.gov/drug/event.json?api_key=NmPuF5e95qXX9gj59DGfG5g2EACkGnfzXP09Xb3H&count=seriousnesshospitalization'
-        url3 = 'https://api.fda.gov/drug/event.json?api_key=NmPuF5e95qXX9gj59DGfG5g2EACkGnfzXP09Xb3H&count=seriousnessdisabling'
-        url4 = 'https://api.fda.gov/drug/event.json?api_key=NmPuF5e95qXX9gj59DGfG5g2EACkGnfzXP09Xb3H&count=seriousnesslifethreatening'
-        url5 = 'https://api.fda.gov/drug/event.json?api_key=NmPuF5e95qXX9gj59DGfG5g2EACkGnfzXP09Xb3H&count=seriousnessother'
-     else:
 
-        url1 = 'https://api.fda.gov/drug/event.json?api_key=NmPuF5e95qXX9gj59DGfG5g2EACkGnfzXP09Xb3H&search=_exists_:(patient.reaction.reactionmeddrapt.exact)+AND+patient.drug.openfda.brand_name:({})&count=seriousnessdeath'.format(selected_drug)
-        url2 = 'https://api.fda.gov/drug/event.json?api_key=NmPuF5e95qXX9gj59DGfG5g2EACkGnfzXP09Xb3H&search=_exists_:(patient.reaction.reactionmeddrapt.exact)+AND+patient.drug.openfda.brand_name:({})&count=seriousnesshospitalization'.format(selected_drug)
-        url3 = 'https://api.fda.gov/drug/event.json?api_key=NmPuF5e95qXX9gj59DGfG5g2EACkGnfzXP09Xb3H&search=_exists_:(patient.reaction.reactionmeddrapt.exact)+AND+patient.drug.openfda.brand_name:({})&count=seriousnessdisabling'.format(selected_drug)
-        url4 = 'https://api.fda.gov/drug/event.json?api_key=NmPuF5e95qXX9gj59DGfG5g2EACkGnfzXP09Xb3H&search=_exists_:(patient.reaction.reactionmeddrapt.exact)+AND+patient.drug.openfda.brand_name:({})&count=seriousnesslifethreatening'.format(selected_drug)
-        url5 = 'https://api.fda.gov/drug/event.json?api_key=NmPuF5e95qXX9gj59DGfG5g2EACkGnfzXP09Xb3H&search=_exists_:(patient.reaction.reactionmeddrapt.exact)+AND+patient.drug.openfda.brand_name:({})&count=seriousnessother'.format(selected_drug)
+         url1 = 'https://api.fda.gov/drug/event.json?search=_exists_:(patient.reaction.reactionmeddrapt.exact)+AND+patient.drug.openfda.brand_name:({})&count=seriousnessdeath'.format(selected_drug)
+         url2 = 'https://api.fda.gov/drug/event.json?search=_exists_:(patient.reaction.reactionmeddrapt.exact)+AND+patient.drug.openfda.brand_name:({})&count=seriousnesshospitalization'.format(selected_drug)
+         url3 = 'https://api.fda.gov/drug/event.json?search=_exists_:(patient.reaction.reactionmeddrapt.exact)+AND+patient.drug.openfda.brand_name:({})&count=seriousnessdisabling'.format(selected_drug)
+         url4 = 'https://api.fda.gov/drug/event.json?search=_exists_:(patient.reaction.reactionmeddrapt.exact)+AND+patient.drug.openfda.brand_name:({})&count=seriousnesslifethreatening'.format(selected_drug)
+         url5 = 'https://api.fda.gov/drug/event.json?search=_exists_:(patient.reaction.reactionmeddrapt.exact)+AND+patient.drug.openfda.brand_name:({})&count=seriousnessother'.format(selected_drug)
+
+     else:
+         url1 = 'https://api.fda.gov/drug/event.json?api_key=NmPuF5e95qXX9gj59DGfG5g2EACkGnfzXP09Xb3H&count=seriousnessdeath'
+         url2 = 'https://api.fda.gov/drug/event.json?api_key=NmPuF5e95qXX9gj59DGfG5g2EACkGnfzXP09Xb3H&count=seriousnesshospitalization'
+         url3 = 'https://api.fda.gov/drug/event.json?api_key=NmPuF5e95qXX9gj59DGfG5g2EACkGnfzXP09Xb3H&count=seriousnessdisabling'
+         url4 = 'https://api.fda.gov/drug/event.json?api_key=NmPuF5e95qXX9gj59DGfG5g2EACkGnfzXP09Xb3H&count=seriousnesslifethreatening'
+         url5 = 'https://api.fda.gov/drug/event.json?api_key=NmPuF5e95qXX9gj59DGfG5g2EACkGnfzXP09Xb3H&count=seriousnessother'
 
      results1 = get_results(url1)
 
@@ -373,21 +373,22 @@ def update_graph2(n_clicks,selected_drug):
     #output=Output("pie-serious", "figure"), inputs=[Input('my_drug_picker', 'value')]
 
 # @cache.memoize(timeout=30)  # in seconds (pickle.dump fails)
-def update_pie_event(n_clicks,selected_drug):
-
+def update_serious_pie(n_clicks,selected_drug):
 
     if (selected_drug):
+
+        url1 = 'https://api.fda.gov/drug/event.json?search=_exists_:(patient.reaction.reactionmeddrapt.exact)+AND+patient.drug.openfda.brand_name:({})&count=seriousnessdeath'.format(selected_drug)
+        url2 = 'https://api.fda.gov/drug/event.json?search=_exists_:(patient.reaction.reactionmeddrapt.exact)+AND+patient.drug.openfda.brand_name:({})&count=seriousnesshospitalization'.format(selected_drug)
+        url3 = 'https://api.fda.gov/drug/event.json?search=_exists_:(patient.reaction.reactionmeddrapt.exact)+AND+patient.drug.openfda.brand_name:({})&count=seriousnessdisabling'.format(selected_drug)
+        url4 = 'https://api.fda.gov/drug/event.json?search=_exists_:(patient.reaction.reactionmeddrapt.exact)+AND+patient.drug.openfda.brand_name:({})&count=seriousnesslifethreatening'.format(selected_drug)
+        url5 = 'https://api.fda.gov/drug/event.json?search=_exists_:(patient.reaction.reactionmeddrapt.exact)+AND+patient.drug.openfda.brand_name:({})&count=seriousnessother'.format(selected_drug)
+
+    else:
         url1 = 'https://api.fda.gov/drug/event.json?api_key=NmPuF5e95qXX9gj59DGfG5g2EACkGnfzXP09Xb3H&count=seriousnessdeath'
         url2 = 'https://api.fda.gov/drug/event.json?api_key=NmPuF5e95qXX9gj59DGfG5g2EACkGnfzXP09Xb3H&count=seriousnesshospitalization'
         url3 = 'https://api.fda.gov/drug/event.json?api_key=NmPuF5e95qXX9gj59DGfG5g2EACkGnfzXP09Xb3H&count=seriousnessdisabling'
         url4 = 'https://api.fda.gov/drug/event.json?api_key=NmPuF5e95qXX9gj59DGfG5g2EACkGnfzXP09Xb3H&count=seriousnesslifethreatening'
         url5 = 'https://api.fda.gov/drug/event.json?api_key=NmPuF5e95qXX9gj59DGfG5g2EACkGnfzXP09Xb3H&count=seriousnessother'
-    else:
-        url1 = 'https://api.fda.gov/drug/event.json?api_key=NmPuF5e95qXX9gj59DGfG5g2EACkGnfzXP09Xb3H&search=_exists_:(patient.reaction.reactionmeddrapt.exact)+AND+patient.drug.openfda.brand_name:({})&count=seriousnessdeath'.format(selected_drug)
-        url2 = 'https://api.fda.gov/drug/event.json?api_key=NmPuF5e95qXX9gj59DGfG5g2EACkGnfzXP09Xb3H&search=_exists_:(patient.reaction.reactionmeddrapt.exact)+AND+patient.drug.openfda.brand_name:({})&count=seriousnesshospitalization'.format(selected_drug)
-        url3 = 'https://api.fda.gov/drug/event.json?api_key=NmPuF5e95qXX9gj59DGfG5g2EACkGnfzXP09Xb3H&search=_exists_:(patient.reaction.reactionmeddrapt.exact)+AND+patient.drug.openfda.brand_name:({})&count=seriousnessdisabling'.format(selected_drug)
-        url4 = 'https://api.fda.gov/drug/event.json?api_key=NmPuF5e95qXX9gj59DGfG5g2EACkGnfzXP09Xb3H&search=_exists_:(patient.reaction.reactionmeddrapt.exact)+AND+patient.drug.openfda.brand_name:({})&count=seriousnesslifethreatening'.format(selected_drug)
-        url5 = 'https://api.fda.gov/drug/event.json?api_key=NmPuF5e95qXX9gj59DGfG5g2EACkGnfzXP09Xb3H&search=_exists_:(patient.reaction.reactionmeddrapt.exact)+AND+patient.drug.openfda.brand_name:({})&count=seriousnessother'.format(selected_drug)
 
     results1 = get_results(url1)
 
